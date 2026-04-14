@@ -1,7 +1,11 @@
 {
   "name": "@green-spot/adminkit-svelte",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "adminkit の Svelte コンポーネントライブラリ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archkit/adminkit-svelte.git"
+  },
   "type": "module",
   "svelte": "./dist/index.js",
   "exports": {
