@@ -16,7 +16,9 @@
     selectable?: boolean;
     selected?: Set<number>;
     sort?: { key: string; direction: 'ascending' | 'descending' } | null;
-    row: Snippet<[T, number]>;
+    filter?: Snippet;
+    row?: Snippet<[T, number]>;
+    cell?: Snippet<[T, Column]>;
     actions?: Snippet<[T, number]>;
   }
 
@@ -28,7 +30,9 @@
     selectable = false,
     selected = $bindable(new Set()),
     sort = $bindable(null),
+    filter,
     row,
+    cell,
     actions,
   }: Props = $props();
 
@@ -74,6 +78,10 @@
   }
 </script>
 
+{#if filter}
+  {@render filter()}
+{/if}
+
 <div class="c-table-scroll">
   <table class={tableCls}>
     <thead>
@@ -104,7 +112,15 @@
           {#if selectable}
             <td><input type="checkbox" aria-label="選択" checked={selected.has(i)} onchange={() => toggleRow(i)}></td>
           {/if}
-          {@render row(item, i)}
+          {#if row}
+            {@render row(item, i)}
+          {:else if cell}
+            {#each columns as col}
+              <td class={col.align || undefined}>
+                {@render cell(item, col)}
+              </td>
+            {/each}
+          {/if}
           {#if actions}
             <td class="action">
               {@render actions(item, i)}

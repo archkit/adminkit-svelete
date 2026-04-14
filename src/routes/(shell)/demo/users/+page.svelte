@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Main, Cluster, Button, Badge, Modal, Pagination, PageHeader, Fields, Field } from '$lib';
+  import { Main, Cluster, Button, Badge, Modal, Pagination, PageHeader, Fields, Field, Dropdown } from '$lib';
   import NavActions from '../../../../demo/NavActions.svelte';
   import Plus from 'lucide-svelte/icons/plus';
   import Download from 'lucide-svelte/icons/download';
@@ -19,17 +19,19 @@
 <Main crumbs={[{label: 'ユーザー管理', href: '#'}, {label: '一覧'}]} width="full">
   {#snippet actions()}
     <NavActions />
-    <div class="c-dropdown">
-      <button class="c-button ghost small" popovertarget="nav-menu" aria-haspopup="menu" aria-expanded="false">
-        <Ellipsis />
-      </button>
-      <ul popover id="nav-menu" role="menu">
+    <Dropdown>
+      {#snippet trigger(popoverId)}
+        <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu" aria-expanded="false">
+          <Ellipsis />
+        </button>
+      {/snippet}
+      {#snippet menu()}
         <li role="presentation"><button role="menuitem"><Bookmark />ブックマーク</button></li>
         <li role="presentation"><button role="menuitem"><Share2 />リンクを共有</button></li>
         <li role="separator"><hr></li>
         <li role="presentation"><button role="menuitem"><Flag />問題を報告</button></li>
-      </ul>
-    </div>
+      {/snippet}
+    </Dropdown>
   {/snippet}
 
   <!-- ページヘッダー -->
@@ -88,16 +90,18 @@
           <td><Badge variant="success">有効</Badge></td>
           <td class="num">42</td>
           <td class="action">
-            <div class="c-dropdown">
-              <button class="c-button ghost small" popovertarget="menu-1" aria-haspopup="menu"><MoreHorizontal /></button>
-              <ul popover id="menu-1" role="menu">
+            <Dropdown>
+              {#snippet trigger(popoverId)}
+                <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu"><MoreHorizontal /></button>
+              {/snippet}
+              {#snippet menu()}
                 <li role="presentation"><a href="/demo/users" role="menuitem"><Eye />詳細</a></li>
                 <li role="presentation"><a href="/demo/users/edit" role="menuitem"><EditIcon />編集</a></li>
                 <li role="presentation"><button role="menuitem">権限変更</button></li>
                 <li role="separator"><hr></li>
                 <li role="presentation"><button role="menuitem" class="danger" onclick={() => deleteOpen = true}><Trash2 />削除</button></li>
-              </ul>
-            </div>
+              {/snippet}
+            </Dropdown>
           </td>
         </tr>
         <tr>
@@ -109,16 +113,18 @@
           <td><Badge variant="success">有効</Badge></td>
           <td class="num">18</td>
           <td class="action">
-            <div class="c-dropdown">
-              <button class="c-button ghost small" popovertarget="menu-2" aria-haspopup="menu"><MoreHorizontal /></button>
-              <ul popover id="menu-2" role="menu">
+            <Dropdown>
+              {#snippet trigger(popoverId)}
+                <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu"><MoreHorizontal /></button>
+              {/snippet}
+              {#snippet menu()}
                 <li role="presentation"><a href="/demo/users" role="menuitem"><Eye />詳細</a></li>
                 <li role="presentation"><a href="/demo/users/edit" role="menuitem"><EditIcon />編集</a></li>
                 <li role="presentation"><button role="menuitem">権限変更</button></li>
                 <li role="separator"><hr></li>
                 <li role="presentation"><button role="menuitem" class="danger" onclick={() => deleteOpen = true}><Trash2 />削除</button></li>
-              </ul>
-            </div>
+              {/snippet}
+            </Dropdown>
           </td>
         </tr>
         <tr>
@@ -130,16 +136,18 @@
           <td><Badge variant="warning">無効</Badge></td>
           <td class="num">0</td>
           <td class="action">
-            <div class="c-dropdown">
-              <button class="c-button ghost small" popovertarget="menu-3" aria-haspopup="menu"><MoreHorizontal /></button>
-              <ul popover id="menu-3" role="menu">
+            <Dropdown>
+              {#snippet trigger(popoverId)}
+                <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu"><MoreHorizontal /></button>
+              {/snippet}
+              {#snippet menu()}
                 <li role="presentation"><a href="/demo/users" role="menuitem"><Eye />詳細</a></li>
                 <li role="presentation"><a href="/demo/users/edit" role="menuitem"><EditIcon />編集</a></li>
                 <li role="presentation"><button role="menuitem">有効化</button></li>
                 <li role="separator"><hr></li>
                 <li role="presentation"><button role="menuitem" class="danger" onclick={() => deleteOpen = true}><Trash2 />削除</button></li>
-              </ul>
-            </div>
+              {/snippet}
+            </Dropdown>
           </td>
         </tr>
       </tbody>

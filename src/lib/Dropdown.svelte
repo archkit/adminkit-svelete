@@ -2,15 +2,18 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
-    id: string;
-    trigger: Snippet;
-    children: Snippet;
+    trigger: Snippet<[string]>;
+    menu: Snippet;
   }
 
-  let { id, trigger, children }: Props = $props();
+  let { trigger, menu }: Props = $props();
+
+  const id = `dropdown-${Math.random().toString(36).slice(2, 9)}`;
 </script>
 
 <div class="c-dropdown">
-  {@render trigger()}
-  {@render children()}
+  {@render trigger(id)}
+  <ul popover {id} role="menu">
+    {@render menu()}
+  </ul>
 </div>

@@ -116,13 +116,13 @@
 
 ## 一覧ページ（DataTable 版）
 
-`DataTable` コンポーネントを使うと、テーブルのヘッダー・ソート・チェックボックス・アクション列が自動生成される。
+`DataTable` を使うと、テーブルのヘッダー・ソート・チェックボックス・アクション列が自動生成される。`filter` snippet でフィルタバーを統合、`Dropdown` の id は自動生成。
 
 ```svelte
 <script lang="ts">
   import {
-    Main, Section, PageHeader, DataTable, Badge, Button,
-    Fields, Field, Pagination, ThemeSwitcher
+    Main, PageHeader, DataTable, Badge, Button, Dropdown,
+    Fields, Field, Pagination, ActionBar, ThemeSwitcher
   } from '@green-spot/adminkit-svelte';
   import PlusIcon from 'lucide-svelte/icons/plus';
   import MoreHorizontalIcon from 'lucide-svelte/icons/more-horizontal';
@@ -168,21 +168,22 @@
     {/snippet}
   </PageHeader>
 
-  <Fields variant="inline" as="form" role="search">
-    <Field label="検索" hidden>
-      <input type="search" placeholder="名前・メールで検索...">
-    </Field>
-    <Field label="ロール" hidden>
-      <select>
-        <option value="">すべてのロール</option>
-        <option>管理者</option>
-        <option>編集者</option>
-      </select>
-    </Field>
-    <Button variant="primary" type="submit">検索</Button>
-  </Fields>
-
-  <DataTable data={users} {columns} selectable bind:selected bind:sort>
+  <!-- searchQuery, roleFilter は $state で定義し、filteredUsers を $derived で算出 -->
+  <DataTable data={filteredUsers} {columns} selectable bind:selected bind:sort>
+    {#snippet filter()}
+      <Fields variant="inline">
+        <Field label="検索" hidden>
+          <Search placeholder="名前・メールで検索..." bind:value={searchQuery} />
+        </Field>
+        <Field label="ロール" hidden>
+          <select bind:value={roleFilter}>
+            <option value="">すべてのロール</option>
+            <option>管理者</option>
+            <option>編集者</option>
+          </select>
+        </Field>
+      </Fields>
+    {/snippet}
     {#snippet row(item)}
       <td><a href="/users/{item.id}">{item.name}</a></td>
       <td>{item.email}</td>
@@ -191,20 +192,65 @@
       <td><Badge variant={item.statusVariant}>{item.status}</Badge></td>
     {/snippet}
     {#snippet actions(item)}
-      <div class="c-dropdown">
-        <button class="c-button ghost small" popovertarget="menu-{item.id}" aria-haspopup="menu"><MoreHorizontalIcon /></button>
-        <ul popover id="menu-{item.id}" role="menu">
+      <Dropdown>
+        {#snippet trigger(popoverId)}
+          <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu"><MoreHorizontalIcon /></button>
+        {/snippet}
+        {#snippet menu()}
           <li role="presentation"><a href="/users/{item.id}" role="menuitem"><EyeIcon />詳細</a></li>
           <li role="presentation"><a href="/users/{item.id}/edit" role="menuitem"><EditIcon />編集</a></li>
           <li role="separator"><hr></li>
           <li role="presentation"><button role="menuitem" class="danger"><Trash2Icon />削除</button></li>
-        </ul>
-      </div>
+        {/snippet}
+      </Dropdown>
     {/snippet}
   </DataTable>
 
   <Pagination total={3} bind:current={currentPage} />
 </Main>
+
+<!-- ActionBar は Main の bar snippet で main-content の外に配置 -->
+```
+
+### DataTable の cell snippet（簡易版）
+
+`cell` snippet を使うと、`<td>` のクラス（`num` 等）が columns 定義から自動付与される。
+
+```svelte
+<DataTable data={users} {columns}>
+  {#snippet cell(item, col)}
+    {#if col.key === 'name'}
+      <a href="/users/{item.id}">{item.name}</a>
+    {:else if col.key === 'status'}
+      <Badge variant={item.statusVariant}>{item.status}</Badge>
+    {:else}
+      {item[col.key]}
+    {/if}
+  {/snippet}
+</DataTable>
+```
+
+## フォームバリデーション
+
+Field の `errorMessage` を使うと、`:user-invalid` 時に自動表示されるエラーメッセージを設定できる。ユーザーがフィールドを操作するまでエラーは表示されない。
+
+```svelte
+<Fields>
+  <Field label="メールアドレス" errorMessage="正しいメールアドレスを入力してください">
+    <input type="email" required placeholder="email@example.com">
+  </Field>
+  <Field label="名前" errorMessage="名前は必須です">
+    <input type="text" required placeholder="名前を入力...">
+  </Field>
+</Fields>
+```
+
+サーバーサイドバリデーションのエラーは `error` props で表示する。
+
+```svelte
+<Field label="メールアドレス" error="このメールアドレスは既に登録されています">
+  <input type="email" value="existing@example.com">
+</Field>
 ```
 
 ## 編集ページ（フォーム + サイドバー）

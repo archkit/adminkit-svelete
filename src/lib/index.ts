@@ -55,4 +55,5 @@ export { default as ShellTopnav } from './ShellTopnav.svelte';
 export { default as ShellMini } from './ShellMini.svelte';
 export { default as ShellStandalone } from './ShellStandalone.svelte';
 export { default as Main } from './Main.svelte';
+export { default as Breadcrumb } from './Breadcrumb.svelte';
 export { default as PageHeader } from './PageHeader.svelte';

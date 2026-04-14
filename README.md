@@ -224,13 +224,14 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Grid` | `cols?: 2 \| 3 \| 4` | 均等カラムグリッド（`l-grid`） |
 | `SidebarLayout` | `reverse?: boolean`, `width?: string` | メイン + サイドの 2 カラム（`l-sidebar`） |
 | `PageHeader` | `title: string`, `actions?: Snippet` | ページヘッダー（h1 + アクションボタン） |
+| `Breadcrumb` | `crumbs?: { label, href? }[]`, `home?: string` | パンくずリスト。ホームアイコン内蔵 |
 
 ### フォーム
 
 | コンポーネント | Props | 説明 |
 |---|---|---|
 | `Fields` | `variant?: 'horizontal' \| 'inline'`, `as?: 'div' \| 'form'` | フォームフィールドのコンテナ。`as="form"` で `<form>` 要素として出力 |
-| `Field` | `label: string`, `hint?: string`, `error?: string`, `hidden?: boolean` | label + input のラッパー。`hidden` でラベルを visually-hidden に |
+| `Field` | `label: string`, `hint?: string`, `error?: string`, `errorMessage?: string`, `hidden?: boolean` | label + input のラッパー。`errorMessage` で `:user-invalid` 時に自動表示 |
 | `Check` | `label: string`, `hint?: string`, `type?: string` | チェックボックス / ラジオ |
 | `Toggle` | `label: string`, `hint?: string`, `checked?: boolean` | トグルスイッチ |
 | `CheckGroup` | `legend?: string`, `horizontal?: boolean` | check/radio の横並びグループ |
@@ -246,7 +247,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 |---|---|---|
 | `Card` | `heading?: string`, `variant?: 'danger'` | カード。`<section>` で出力。`heading` で自動レベルの見出しを出力 |
 | `Table` | `compact?: boolean`, `auto?: boolean` | テーブル（`c-table-scroll` + `c-table`）。単純なテーブル用 |
-| `DataTable` | `data: T[]`, `columns: Column[]`, `selectable?: boolean`, `compact?: boolean`, `row: Snippet`, `actions?: Snippet` | データテーブル。ソート・チェックボックス・アクション列を統合 |
+| `DataTable` | `data: T[]`, `columns: Column[]`, `selectable?: boolean`, `compact?: boolean`, `filter?: Snippet`, `row?: Snippet`, `cell?: Snippet`, `actions?: Snippet` | データテーブル。ソート・チェックボックス・フィルタ・アクション列を統合。`cell` で `<td>` のクラスを自動付与 |
 | `List` | `variants?: ('bordered' \| 'striped' \| 'interactive' \| 'disc' \| 'decimal')[]`, `as?: 'ul' \| 'ol'` | リスト。`as="ol"` で番号付きリスト |
 | `DefinitionList` | `variants?: ('bordered' \| 'striped' \| 'horizontal')[]` | 定義リスト（`<dl>` で出力） |
 | `Badge` | `variant?: 'primary' \| 'success' \| 'warning' \| 'danger'` | バッジ |
@@ -259,7 +260,7 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 | `Skeleton` | `shape?: 'text' \| 'circle'`, `width?: string`, `height?: string` | スケルトンローダー |
 | `Dot` | `variant?: 'accent' \| 'success' \| 'warning'`, `count?: number \| string` | 通知ドット。`count` で数値表示 |
 | `Divider` | `label?: string` | 区切り線。`label` でテキスト付き |
-| `EmptyState` | — | 空状態の表示 |
+| `EmptyState` | `heading?: string`, `icon?: Snippet` | 空状態の表示。`heading` で自動レベルの見出しを出力 |
 
 ### フィードバック
 
@@ -267,11 +268,10 @@ npm install @green-spot/adminkit-svelte @green-spot/adminkit lucide-svelte
 |---|---|---|
 | `Alert` | `variant?: 'success' \| 'warning' \| 'danger'` | コンテンツ内の通知 |
 | `Banner` | `variant?: 'success' \| 'warning' \| 'danger'`, `dismissible?: boolean` | ページ上部の帯状通知 |
-| `Toast` | — | トーストコンテナ。ページに 1 つ配置 |
-| `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数 |
+| `showToast(opts)` | `{ title, message?, variant?, duration?, action? }` | トーストを表示する関数。Shell に内蔵されているため配置不要 |
 | `clearToasts()` | — | 全トーストをクリア |
 | `Modal` | `open: boolean`, `label: string`, `header?: Snippet`, `footer?: Snippet` | モーダルダイアログ。`bind:open` で開閉制御 |
-| `Dropdown` | `id: string`, `trigger: Snippet` | ドロップダウンメニュー（Popover API） |
+| `Dropdown` | `trigger: Snippet<[string]>`, `menu: Snippet` | ドロップダウンメニュー。id は自動生成され trigger に渡される |
 | `Tooltip` | `text: string` | ツールチップ |
 | `Tabs` | `tabs: { id, label, content: Snippet }[]`, `active?: string`, `label: string` | タブ。キーボードナビゲーション対応 |
 | `Pagination` | `current: number`, `total: number`, `href?: (page) => string`, `onchange?: (page) => void` | ページネーション |

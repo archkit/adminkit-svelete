@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Main, Section, PageHeader, DataTable, Badge, Button, ActionBar, Pagination, ThemeSwitcher, Dot } from '$lib';
+  import { Main, Section, PageHeader, DataTable, Badge, Button, ActionBar, Pagination, Dropdown, Fields, Field, Search, ThemeSwitcher, Dot } from '$lib';
   import BellIcon from 'lucide-svelte/icons/bell';
   import CircleHelpIcon from 'lucide-svelte/icons/circle-help';
   import MoreHorizontalIcon from 'lucide-svelte/icons/more-horizontal';
@@ -41,10 +41,24 @@
   let selected = $state(new Set<number>());
   let sort = $state<{ key: string; direction: 'ascending' | 'descending' } | null>(null);
   let currentPage = $state(1);
+  let searchQuery = $state('');
+  let roleFilter = $state('');
   const perPage = 5;
 
+  const filteredUsers = $derived.by(() => {
+    let result = allUsers;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+    }
+    if (roleFilter) {
+      result = result.filter(u => u.role === roleFilter);
+    }
+    return result;
+  });
+
   const sortedUsers = $derived.by(() => {
-    let result = [...allUsers];
+    let result = [...filteredUsers];
     if (sort) {
       const key = sort.key as keyof User;
       result.sort((a, b) => {
@@ -62,7 +76,7 @@
     sortedUsers.slice((currentPage - 1) * perPage, currentPage * perPage)
   );
 
-  const totalPages = $derived(Math.ceil(allUsers.length / perPage));
+  const totalPages = $derived(Math.ceil(filteredUsers.length / perPage));
 </script>
 
 <Main crumbs={[{ label: 'Svelte コンポーネント', href: '#' }, { label: 'DataTable' }]}>
@@ -97,6 +111,21 @@
   <!-- Selectable + Actions + Sort + Pagination + ActionBar -->
   <Section heading="Selectable + Actions + ソート + ページネーション">
     <DataTable data={pagedUsers} {columns} selectable bind:selected bind:sort>
+      {#snippet filter()}
+        <Fields variant="inline">
+          <Field label="検索" hidden>
+            <Search placeholder="名前・メールで検索..." bind:value={searchQuery} />
+          </Field>
+          <Field label="ロール" hidden>
+            <select bind:value={roleFilter}>
+              <option value="">すべてのロール</option>
+              <option>管理者</option>
+              <option>編集者</option>
+              <option>閲覧者</option>
+            </select>
+          </Field>
+        </Fields>
+      {/snippet}
       {#snippet row(item)}
         <td><a href="#">{item.name}</a></td>
         <td>{item.email}</td>
@@ -106,15 +135,17 @@
         <td class="num">{item.posts}</td>
       {/snippet}
       {#snippet actions(item)}
-        <div class="c-dropdown">
-          <button class="c-button ghost small" popovertarget="menu-{item.id}" aria-haspopup="menu"><MoreHorizontalIcon /></button>
-          <ul popover id="menu-{item.id}" role="menu">
+        <Dropdown>
+          {#snippet trigger(popoverId)}
+            <button class="c-button ghost small" popovertarget={popoverId} aria-haspopup="menu"><MoreHorizontalIcon /></button>
+          {/snippet}
+          {#snippet menu()}
             <li role="presentation"><button role="menuitem"><EyeIcon />詳細</button></li>
             <li role="presentation"><button role="menuitem"><EditIcon />編集</button></li>
             <li role="separator"><hr></li>
             <li role="presentation"><button role="menuitem" class="danger"><Trash2Icon />削除</button></li>
-          </ul>
-        </div>
+          {/snippet}
+        </Dropdown>
       {/snippet}
     </DataTable>
 

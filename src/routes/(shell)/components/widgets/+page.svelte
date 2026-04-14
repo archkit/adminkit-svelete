@@ -3,7 +3,7 @@
     Main, Section, Stack, Cluster, Grid, PageHeader,
     Button, Badge, Alert, Banner, Card, Divider, Avatar, Tooltip,
     Skeleton, Search, Tag, TagList, Dot, ToggleGroup, Stats, Progress,
-    Stepper, EmptyState, Upload, Toast, showToast, ThemeSwitcher
+    Stepper, EmptyState, Upload, showToast, ThemeSwitcher
   } from '$lib';
   import Bell from 'lucide-svelte/icons/bell';
   import CircleHelp from 'lucide-svelte/icons/circle-help';
@@ -28,8 +28,6 @@
   let toggleValue = $state('list');
   let togglePeriod = $state('day');
 </script>
-
-<Toast />
 
 <Progress value={40} label="ページ進捗" pageTop />
 

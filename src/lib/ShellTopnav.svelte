@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import Toast from './Toast.svelte';
 
   interface Props {
     title?: string;
@@ -28,3 +29,4 @@
     {@render children()}
   </div>
 </div>
+<Toast />

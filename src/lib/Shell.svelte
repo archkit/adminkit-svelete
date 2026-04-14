@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import Menu from 'lucide-svelte/icons/menu';
+  import Toast from './Toast.svelte';
 
   interface Props {
     title?: string;
@@ -54,3 +55,4 @@
     {/if}
   </div>
 </div>
+<Toast />

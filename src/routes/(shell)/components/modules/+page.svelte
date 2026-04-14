@@ -293,19 +293,19 @@
 
   <!-- Dropdown -->
   <Section heading="Dropdown">
-    <Dropdown id="demo-dropdown">
-      {#snippet trigger()}
-        <Button popovertarget="demo-dropdown" aria-haspopup="menu" aria-expanded="false">
+    <Dropdown>
+      {#snippet trigger(popoverId)}
+        <Button popovertarget={popoverId} aria-haspopup="menu" aria-expanded="false">
           アクション<ChevronDown />
         </Button>
       {/snippet}
-      <ul role="menu">
+      {#snippet menu()}
         <li role="presentation"><button role="menuitem"><Edit />編集</button></li>
         <li role="presentation"><button role="menuitem"><Copy />複製</button></li>
         <li role="presentation"><button role="menuitem"><Archive />アーカイブ</button></li>
         <li role="separator"><hr></li>
         <li role="presentation"><button role="menuitem" class="danger"><Trash2 />削除</button></li>
-      </ul>
+      {/snippet}
     </Dropdown>
   </Section>
 
